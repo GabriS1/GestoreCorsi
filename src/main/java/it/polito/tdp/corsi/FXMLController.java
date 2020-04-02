@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 import it.polito.tdp.corsi.model.Corso;
 import it.polito.tdp.corsi.model.Model;
+import it.polito.tdp.corsi.model.Studente;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -105,12 +106,46 @@ public class FXMLController {
 
     @FXML
     void stampaDivisione(ActionEvent event) {
-
+    	
+    	txtRisultato.clear();
+    	
+    	String codins = txtCorso.getText();
+    	//OUTPUT: dato un corso ci aspettiamo una divisione del genere
+    	
+    	//Informatica 12
+    	//Gestionali 13 
+    	
+    	Map<String, Integer> statistiche = this.model.getDivisioneCDS(new Corso(codins, null, null, null));
+    	
+    	for(String  cds : statistiche.keySet()) {
+    		
+    		txtRisultato.appendText(cds + " " + statistiche.get(cds) + "\n");
+    	}
+    	
     }
 
     @FXML
     void stampaStudenti(ActionEvent event) {
-
+    	txtRisultato.clear();
+    	
+    	String codins = txtCorso.getText();
+    	
+    	//controllo se codice corrisponde a corso esistente
+    	if(!this.model.esisteCorso(codins)) {
+    		txtRisultato.setText("Il corso non esiste\n");
+    		return;
+    	}
+    	
+    	List<Studente> studenti = this.model.getStudentiByCorso(new Corso(codins, null, null, null));
+    	
+    	if(studenti.size()==0) {
+    		txtRisultato.setText("Il corso non h studenti iscritti");
+    		return;
+    	}else {
+    		for(Studente s: studenti) {
+    			txtRisultato.appendText(s.toString()+"\n");
+    		}
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
